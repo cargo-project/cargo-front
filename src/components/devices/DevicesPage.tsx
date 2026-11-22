@@ -1,0 +1,28 @@
+"use client";
+import { Cpu, Plus, RadioTower, Unplug, Zap } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import type { DeviceStatus, IoTDevice } from "@/types/domain";
+import { deviceService } from "@/services/deviceService";
+import { vehicleService } from "@/services/vehicleService";
+import { useLanguage } from "@/i18n/LanguageContext";
+import { AsyncState } from "@/components/ui/AsyncState";
+import { Button } from "@/components/ui/Button";
+import { DataTable, type TableColumn } from "@/components/ui/DataTable";
+import { Input, Select } from "@/components/ui/FormField";
+import { Modal } from "@/components/ui/Modal";
+import { PageHeader } from "@/components/ui/PageHeader";
+import { RowActions } from "@/components/ui/Actions";
+import { StatusPill } from "@/components/ui/StatusPill";
+
+export function DevicesPage() {
+  const { t } = useLanguage();
+  const [items, setItems] = useState<IoTDevice[]>([]);
+  const [vehicleCodes, setVehicleCodes] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true); const [error, setError] = useState(""); const [saving, setSaving] = useState(false); const [editing, setEditing] = useState<IoTDevice | null>(null); const [open, setOpen] = useState(false);
+  const load = useCallback(async () => { setLoading(true); setError(""); try { const [devices, vehicles] = await Promise.all([deviceService.getDevices(), vehicleService.getVehicles()]); setItems(devices); setVehicleCodes(vehicles.map((vehicle) => vehicle.id)); } catch (reason) { setError(reason instanceof Error ? reason.message : "No se pudieron cargar los dispositivos."); } finally { setLoading(false); } }, []);
+  useEffect(() => { void load(); }, [load]);
+  const save = async (event: React.FormEvent<HTMLFormElement>) => { event.preventDefault(); setSaving(true); const data = new FormData(event.currentTarget); const status = String(data.get("status")) as DeviceStatus; const input = { code: String(data.get("code")), type: String(data.get("type")) as IoTDevice["type"], serial: String(data.get("serial")), firmware: String(data.get("firmware")), vehicleCode: String(data.get("vehicle")) || undefined, status, active: status !== "inactive" }; try { const value = editing ? await deviceService.updateDevice(editing.id, input) : await deviceService.createDevice(input); setItems((current) => editing ? current.map((item) => item.id === editing.id ? value : item) : [value, ...current]); setOpen(false); } catch (reason) { setError(reason instanceof Error ? reason.message : "No se pudo guardar."); } finally { setSaving(false); } };
+  const stats = [[Cpu, t("devices.total"), items.filter((item) => item.active).length], [Zap, t("devices.online"), items.filter((item) => item.status === "online").length], [Unplug, t("devices.offline"), items.filter((item) => item.status === "offline").length], [RadioTower, t("devices.unassigned"), items.filter((item) => !item.vehicle).length]] as const;
+  const columns: TableColumn<IoTDevice>[] = [{ key: "id", label: t("devices.code"), render: (item) => <strong className="primary-text">{item.id}</strong> }, { key: "type", label: t("devices.type"), render: (item) => item.type }, { key: "vehicle", label: t("devices.assignedVehicle"), render: (item) => item.vehicle ?? t("common.none") }, { key: "firmware", label: t("devices.firmware"), render: (item) => item.firmware }, { key: "last", label: t("devices.lastConnection"), render: (item) => item.lastConnection }, { key: "status", label: t("common.status"), render: (item) => <StatusPill status={item.status} /> }, { key: "actions", label: t("common.actions"), render: (item) => <RowActions onEdit={() => { setEditing(item); setOpen(true); }} /> }];
+  return <div className="module-page"><PageHeader title={t("devices.title")} subtitle={t("devices.subtitle")} action={<Button onClick={() => { setEditing(null); setOpen(true); }}><Plus size={17} />{t("devices.register")}</Button>} /><div className="summary-grid">{stats.map(([Icon, label, value]) => <div className="card mini-stat" key={label}><Icon /><span><small>{label}</small><strong>{value}</strong></span></div>)}</div><AsyncState loading={loading} error={error} empty={!loading && !error && items.length === 0} onRetry={() => void load()} />{!loading && !error && items.length > 0 && <DataTable rows={items} columns={columns} getKey={(item) => item.id} />}<Modal isOpen={open} onClose={() => setOpen(false)} title={t("devices.formTitle")}><form className="form-grid" onSubmit={save}><Input name="code" label={t("devices.code")} defaultValue={editing?.id} required disabled={Boolean(editing)} /><Select name="type" label={t("devices.type")} defaultValue={editing?.type ?? "Edge Gateway"}><option>Edge Gateway</option><option>GNSS</option></Select><Input name="serial" label={t("devices.serial")} defaultValue={editing?.serial} required /><Input name="firmware" label={t("devices.firmware")} defaultValue={editing?.firmware} required /><Select name="vehicle" label={t("devices.assignedVehicle")} defaultValue={editing?.vehicle ?? ""}><option value="">{t("common.none")}</option>{vehicleCodes.map((code) => <option key={code}>{code}</option>)}</Select><Select name="status" label={t("common.status")} defaultValue={editing?.status ?? "inactive"}>{["online", "offline", "inactive"].map((value) => <option key={value} value={value}>{t(`status.${value}` as never)}</option>)}</Select><div className="form-actions"><Button type="button" variant="ghost" onClick={() => setOpen(false)}>{t("common.cancel")}</Button><Button type="submit" disabled={saving}>{t("common.save")}</Button></div></form></Modal></div>;
+}
