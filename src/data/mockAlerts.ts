@@ -1,0 +1,7 @@
+import type { MonitoringEvent } from "@/types/domain";
+export const mockAlerts: MonitoringEvent[] = [
+  { id:"ALT-108", type:"ROUTE_DEVIATION", vehicleId:"TRK-018", tripId:"VJ-2046", driver:"Carlos Mendoza", date:"04/10/2026 10:28", status:"pending", position:"-12.1687, -76.9714", description:"Secuencia de posiciones fuera del patrón reciente del trayecto real.", evidence:["10:26 · Posición recibida", "10:27 · Desplazamiento atípico", "10:28 · Evento confirmado"] },
+  { id:"ALT-107", type:"CONNECTION_RECOVERY", vehicleId:"TRK-021", tripId:"VJ-2045", driver:"Rosa Vega", date:"04/10/2026 10:15", status:"reviewed", position:"-11.9768, -77.0584", description:"La comunicación del dispositivo fue recuperada.", evidence:["10:09 · Último mensaje", "10:15 · Comunicación recuperada"] },
+  { id:"ALT-106", type:"PROLONGED_STOP", vehicleId:"TRK-018", tripId:"VJ-2046", driver:"Carlos Mendoza", date:"04/10/2026 09:42", status:"reviewed", position:"-12.1420, -77.0102", description:"La unidad permaneció detenida más del umbral configurado.", evidence:["09:27 · Velocidad 0 km/h", "09:42 · Umbral superado"] },
+  { id:"ALT-105", type:"DESTINATION_ARRIVAL", vehicleId:"TRK-011", tripId:"VJ-2043", driver:"Lucía Ramos", date:"03/10/2026 18:35", status:"reviewed", position:"Chincha, Ica", description:"La unidad ingresó al radio de llegada configurado.", evidence:["18:34 · Radio de destino", "18:35 · Llegada confirmada"] },
+];
