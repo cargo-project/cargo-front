@@ -1,0 +1,9 @@
+node_modules
+.next
+.pnpm-store
+.git
+.vscode
+*.tsbuildinfo
+npm-debug.log*
+pnpm-debug.log*
+
