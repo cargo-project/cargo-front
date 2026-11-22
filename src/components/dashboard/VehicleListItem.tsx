@@ -1,0 +1,4 @@
+import { ChevronRight, Clock3, Gauge } from "lucide-react";
+import type { Vehicle } from "@/types/vehicle";
+import { Badge } from "@/components/ui/Badge";
+export function VehicleListItem({ vehicle, selected, onSelect }: { vehicle: Vehicle; selected: boolean; onSelect: (id: string) => void }) { return <button className={`vehicle-item ${selected ? "is-selected" : ""}`} onClick={() => onSelect(vehicle.id)} aria-pressed={selected}><span className="vehicle-item__top"><strong>{vehicle.id}</strong><Badge status={vehicle.status} /></span><span className="vehicle-item__route">{vehicle.origin} <span>→</span> {vehicle.destination}</span><span className="vehicle-item__meta">{vehicle.speed !== undefined && <span><Gauge size={14} />{vehicle.speed} km/h</span>}<span><Clock3 size={14} />{vehicle.lastSignal}</span></span><ChevronRight className="vehicle-item__arrow" size={18} /></button>; }
