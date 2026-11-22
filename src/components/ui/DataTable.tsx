@@ -1,0 +1,3 @@
+import type { ReactNode } from "react";
+export interface TableColumn<T> { key: string; label: string; render: (item: T) => ReactNode; }
+export function DataTable<T>({ columns, rows, getKey }: { columns: TableColumn<T>[]; rows: T[]; getKey: (item: T) => string }) { return <div className="table-card card"><div className="table-scroll"><table><thead><tr>{columns.map((column) => <th key={column.key}>{column.label}</th>)}</tr></thead><tbody>{rows.map((row) => <tr key={getKey(row)}>{columns.map((column) => <td key={column.key} data-label={column.label}>{column.render(row)}</td>)}</tr>)}</tbody></table></div></div>; }
