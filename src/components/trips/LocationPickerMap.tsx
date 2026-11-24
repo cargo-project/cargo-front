@@ -3,8 +3,10 @@
 import maplibregl from "maplibre-gl";
 import { useEffect, useRef } from "react";
 import type { Coordinates } from "@/types/api";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 export function LocationPickerMap({ origin, destination, active, onPick }: { origin?: Coordinates; destination?: Coordinates; active: "origin" | "destination"; onPick: (point: Coordinates) => void }) {
+  const { t } = useLanguage();
   const container = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const originMarker = useRef<maplibregl.Marker | null>(null);
@@ -35,5 +37,5 @@ export function LocationPickerMap({ origin, destination, active, onPick }: { ori
       if (point) map.flyTo({ center: [point.longitude, point.latitude], zoom: 15, duration: 650 });
     }
   }, [origin, destination]);
-  return <div><p className="map-picker-help">Seleccionando <strong>{active === "origin" ? "origen" : "destino"}</strong>. Haz clic en el mapa.</p><div ref={container} className="route-map location-picker" /><div className="coordinate-summary"><span>Origen: {origin ? `${origin.latitude.toFixed(5)}, ${origin.longitude.toFixed(5)}` : "pendiente"}</span><span>Destino: {destination ? `${destination.latitude.toFixed(5)}, ${destination.longitude.toFixed(5)}` : "pendiente"}</span></div></div>;
+  return <div><p className="map-picker-help">{t("create.mapSelecting")} <strong>{active === "origin" ? t("create.mapOrigin") : t("create.mapDestination")}</strong>. {t("create.mapClickHint")}</p><div ref={container} className="route-map location-picker" /><div className="coordinate-summary"><span>{t("create.origin")}: {origin ? `${origin.latitude.toFixed(5)}, ${origin.longitude.toFixed(5)}` : t("create.mapPending")}</span><span>{t("create.destination")}: {destination ? `${destination.latitude.toFixed(5)}, ${destination.longitude.toFixed(5)}` : t("create.mapPending")}</span></div></div>;
 }
