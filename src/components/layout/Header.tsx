@@ -50,7 +50,7 @@ export function Header({ onMenuOpen }: { onMenuOpen: () => void }) {
             <span className="avatar" aria-hidden="true">{initials}</span><span className="user-copy"><strong>{user?.fullName}</strong><small>{user?.role === "ADMIN" ? "Administrador" : "Operador"}</small></span><ChevronDown size={16} />
           </button>
           <Dropdown isOpen={userOpen} onClose={closeUser} className="user-dropdown">
-            <button role="menuitem"><UserRound size={17} />{t("header.profile")}</button><button role="menuitem" onClick={() => void handleLogout()}><LogOut size={17} />{t("header.logout")}</button>
+            {user?.role !== "ADMIN" && <button role="menuitem" onClick={() => { closeUser(); router.push("/configuracion?tab=profile"); }}><UserRound size={17} />{t("header.profile")}</button>}<button role="menuitem" onClick={() => void handleLogout()}><LogOut size={17} />{t("header.logout")}</button>
           </Dropdown>
         </div>
       </div>
