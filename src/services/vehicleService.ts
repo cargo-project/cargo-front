@@ -20,5 +20,6 @@ const adapt = (item: ApiVehicle): FleetVehicle => ({
 export const vehicleService = {
   async getVehicles() { return (await apiClient.get<ApiVehicle[]>("/vehicles")).map(adapt); },
   async createVehicle(input: VehicleInput) { return adapt(await apiClient.post<ApiVehicle>("/vehicles", input)); },
+  async deleteVehicle(code: string) { await apiClient.delete(`/vehicles/${encodeURIComponent(code)}`); },
   async updateVehicle(code: string, input: VehicleInput) { return adapt(await apiClient.put<ApiVehicle>(`/vehicles/${encodeURIComponent(code)}`, input)); },
 };

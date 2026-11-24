@@ -8,5 +8,6 @@ const adapt = (item: ApiDevice): IoTDevice => ({ id: item.code, type: item.type,
 export const deviceService = {
   async getDevices() { return (await apiClient.get<ApiDevice[]>("/devices")).map(adapt); },
   async createDevice(input: DeviceInput) { return adapt(await apiClient.post<ApiDevice>("/devices", input)); },
+  async deleteDevice(code: string) { await apiClient.delete(`/devices/${encodeURIComponent(code)}`); },
   async updateDevice(code: string, input: DeviceInput) { return adapt(await apiClient.put<ApiDevice>(`/devices/${encodeURIComponent(code)}`, input)); },
 };

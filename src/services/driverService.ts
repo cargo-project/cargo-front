@@ -7,5 +7,6 @@ const adapt = (item: ApiDriver): Driver => ({ id: item.code, firstName: item.fir
 export const driverService = {
   async getDrivers() { return (await apiClient.get<ApiDriver[]>("/drivers")).map(adapt); },
   async createDriver(input: DriverInput) { return adapt(await apiClient.post<ApiDriver>("/drivers", input)); },
+  async deleteDriver(code: string) { await apiClient.delete(`/drivers/${encodeURIComponent(code)}`); },
   async updateDriver(code: string, input: DriverInput) { return adapt(await apiClient.put<ApiDriver>(`/drivers/${encodeURIComponent(code)}`, input)); },
 };

@@ -11,6 +11,7 @@ import { DataTable, type TableColumn } from "@/components/ui/DataTable";
 import { FilterBar } from "@/components/ui/FilterBar";
 import { Input, Select, Textarea } from "@/components/ui/FormField";
 import { Modal } from "@/components/ui/Modal";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { RowActions } from "@/components/ui/Actions";
 import { SearchInput } from "@/components/ui/SearchInput";
@@ -27,6 +28,7 @@ export function VehiclesPage() {
   const [status, setStatus] = useState("all");
   const [editing, setEditing] = useState<FleetVehicle | null>(null);
   const [detail, setDetail] = useState<FleetVehicle | null>(null);
+  const [deleting, setDeleting] = useState<FleetVehicle | null>(null);
   const [open, setOpen] = useState(false);
   const [toast, setToast] = useState("");
   const load = useCallback(async () => {
@@ -56,9 +58,9 @@ export function VehiclesPage() {
     { key: "driver", label: t("vehicles.currentDriver"), render: (item) => item.driver ?? t("common.none") },
     { key: "trip", label: t("vehicles.currentTrip"), render: (item) => item.currentTrip ?? "—" },
     { key: "signal", label: t("vehicles.lastSignal"), render: (item) => item.lastSignal },
-    { key: "actions", label: t("common.actions"), render: (item) => <RowActions onView={() => setDetail(item)} onEdit={() => { setEditing(item); setOpen(true); }} /> },
+    { key: "actions", label: t("common.actions"), render: (item) => <RowActions onView={() => setDetail(item)} onEdit={() => { setEditing(item); setOpen(true); }} onDelete={() => setDeleting(item)} /> },
   ];
   return <div className="module-page"><PageHeader title={t("vehicles.title")} subtitle={t("vehicles.subtitle")} action={<Button onClick={() => { setEditing(null); setOpen(true); }}><Plus size={17} />{t("vehicles.add")}</Button>} /><FilterBar><SearchInput value={search} onChange={setSearch} placeholder={t("vehicles.search")} /><Select label={t("common.status")} value={status} onChange={(event) => setStatus(event.target.value)}><option value="all">{t("common.all")}</option>{["available", "onRoute", "stopped", "maintenance", "offline"].map((value) => <option key={value} value={value}>{t(`status.${value}` as never)}</option>)}</Select></FilterBar><AsyncState loading={loading} error={error} empty={!loading && !error && filtered.length === 0} onRetry={() => void load()} />{!loading && !error && filtered.length > 0 && <DataTable rows={filtered} columns={columns} getKey={(item) => item.id} />}
     <Modal isOpen={open} onClose={() => setOpen(false)} title={t("vehicles.formTitle")}><form className="form-grid" onSubmit={save}><Input name="code" label={t("vehicles.code")} defaultValue={editing?.id} pattern="[A-Za-z0-9\-]{2,24}" required disabled={Boolean(editing)} /><Input name="plate" label={t("vehicles.plate")} defaultValue={editing?.plate} pattern="[A-Za-z0-9]{3}[\-\s]?[0-9]{3}" hint={t("vehicles.plateHint")} placeholder="ABC-123" required /><Input name="brand" label={t("vehicles.brand")} defaultValue={editing?.brand} required /><Input name="model" label={t("vehicles.model")} defaultValue={editing?.model} required /><Select name="status" label={t("common.status")} defaultValue={editing?.status ?? "available"}>{["available", "onRoute", "stopped", "maintenance", "offline"].map((value) => <option key={value} value={value}>{t(`status.${value}` as never)}</option>)}</Select><Textarea name="description" label={t("common.description")} defaultValue={editing?.description} /><div className="form-actions"><Button type="button" variant="ghost" onClick={() => setOpen(false)}>{t("common.cancel")}</Button><Button type="submit" disabled={saving}>{t("common.save")}</Button></div></form></Modal>
-    <Modal isOpen={Boolean(detail)} onClose={() => setDetail(null)} title={detail?.id ?? ""}>{detail && <div className="detail-grid"><span className="detail-icon"><Truck /></span><dl><div><dt>{t("vehicles.plate")}</dt><dd>{detail.plate}</dd></div><div><dt>{t("vehicles.brandModel")}</dt><dd>{detail.brand} {detail.model}</dd></div><div><dt>{t("common.status")}</dt><dd><StatusPill status={detail.status} /></dd></div><div><dt>{t("common.description")}</dt><dd>{detail.description}</dd></div></dl></div>}</Modal>{toast && <Toast message={toast} />}</div>;
+    <Modal isOpen={Boolean(detail)} onClose={() => setDetail(null)} title={detail?.id ?? ""}>{detail && <div className="detail-grid"><span className="detail-icon"><Truck /></span><dl><div><dt>{t("vehicles.plate")}</dt><dd>{detail.plate}</dd></div><div><dt>{t("vehicles.brandModel")}</dt><dd>{detail.brand} {detail.model}</dd></div><div><dt>{t("common.status")}</dt><dd><StatusPill status={detail.status} /></dd></div><div><dt>{t("common.description")}</dt><dd>{detail.description}</dd></div></dl></div>}</Modal><ConfirmDialog isOpen={Boolean(deleting)} title={t("vehicles.deleteTitle")} message={t("vehicles.deleteConfirm").replace("{name}", deleting ? `${deleting.id} (${deleting.plate})` : "")} confirmLabel={t("common.delete")} onClose={() => setDeleting(null)} onConfirm={async () => { if (!deleting) return; await vehicleService.deleteVehicle(deleting.id); setItems((current) => current.filter((item) => item.id !== deleting.id)); setToast(t("common.deleted")); window.setTimeout(() => setToast(""), 2500); }} />{toast && <Toast message={toast} />}</div>;
 }
