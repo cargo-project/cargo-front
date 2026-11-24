@@ -161,3 +161,41 @@ export interface ApiTrack {
   geometry: { type: "LineString"; coordinates: [number, number][] };
 }
 
+
+export interface ApiAdminAccount {
+  id: string;
+  email: string;
+  fullName: string;
+  role: "ADMIN" | "OPERATOR";
+  isActive: boolean;
+  createdAt: string;
+  lastLoginAt?: string | null;
+  failedLoginsLastDay: number;
+  lockedUntil?: string | null;
+  telegramChatId?: string | null;
+}
+
+export interface ApiAdminOverview {
+  generatedAt: string;
+  accounts: ApiAdminAccount[];
+  loginsLastDay: number;
+  failedLoginsLastDay: number;
+  fleet: { vehicles: number; drivers: number; devices: number; devicesOnline: number; activeTrips: number; totalTrips: number };
+  telemetryLastDay: { total: number; live: number; delayed: number };
+  eventsLastDay: Record<string, number>;
+  eventsLastWeek: Record<string, number>;
+  delayedEventsLastWeek: number;
+  notificationsLastDay: { sent: number; failed: number; pending: number; skipped: number };
+  outboxPending: number;
+}
+
+export interface ApiActivityEntry {
+  id: string;
+  occurredAt: string;
+  action: string;
+  entityType: string;
+  entityId: string;
+  actorEmail?: string | null;
+  actorName?: string | null;
+  details: Record<string, unknown>;
+}

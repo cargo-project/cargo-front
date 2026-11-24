@@ -4,7 +4,8 @@ import { PanelLeftClose, PanelLeftOpen, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { NAV_ITEMS } from "./navItems";
+import { ADMIN_NAV_ITEMS, NAV_ITEMS } from "./navItems";
+import { useAuth } from "@/auth/AuthContext";
 import { useLanguage } from "@/i18n/LanguageContext";
 
 interface SidebarProps {
@@ -16,6 +17,8 @@ interface SidebarProps {
 export function Sidebar({ mobileOpen, onMobileClose, onCollapsedChange }: SidebarProps) {
   const pathname = usePathname();
   const { t } = useLanguage();
+  const { user } = useAuth();
+  const isAdmin = user?.role === "ADMIN";
   const [collapsed, setCollapsed] = useState(false);
 
   useEffect(() => {
@@ -29,7 +32,7 @@ export function Sidebar({ mobileOpen, onMobileClose, onCollapsedChange }: Sideba
     sessionStorage.setItem("cargo-sidebar-collapsed", String(next));
   };
 
-  const activeHref = NAV_ITEMS
+  const activeHref = [...NAV_ITEMS, ...ADMIN_NAV_ITEMS]
     .filter(({ href }) => pathname === href || (href !== "/home" && pathname.startsWith(`${href}/`)))
     .sort((a, b) => b.href.length - a.href.length)[0]?.href;
 
@@ -49,6 +52,14 @@ export function Sidebar({ mobileOpen, onMobileClose, onCollapsedChange }: Sideba
               <Icon size={20} aria-hidden="true" /><span>{t(labelKey)}</span>
             </Link>
           ))}
+          {isAdmin && <>
+            <p className="sidebar__section">{t("nav.adminSection")}</p>
+            {ADMIN_NAV_ITEMS.map(({ labelKey, href, icon: Icon }) => (
+              <Link key={href} href={href} onClick={onMobileClose} className={`nav-item nav-item--admin ${isActive(href) ? "is-active" : ""}`} title={collapsed ? t(labelKey) : undefined} aria-current={isActive(href) ? "page" : undefined}>
+                <Icon size={20} aria-hidden="true" /><span>{t(labelKey)}</span>
+              </Link>
+            ))}
+          </>}
         </nav>
         <button className="sidebar__toggle" onClick={toggle} aria-label={collapsed ? t("app.expand") : t("app.collapse")} title={collapsed ? t("app.expand") : undefined}>
           {collapsed ? <PanelLeftOpen size={19} /> : <PanelLeftClose size={19} />}<span>{t("app.collapse")}</span>
