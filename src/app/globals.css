@@ -256,3 +256,7 @@ body { background-image: radial-gradient(circle at 82% -10%, rgba(107,143,113,.1
 .timeline>button.timeline-item:focus-visible { outline:2px solid var(--primary);outline-offset:2px; }
 .timeline-item--emergency>span { background:var(--danger) !important; }
 .timeline-item .timeline-tag { margin-top:4px; }
+/* Pista de formato bajo el campo; se pone en rojo cuando el valor escrito no cumple el formato. */
+.form-field__hint { color:var(--muted); font-size:10.5px; font-weight:500; line-height:1.35; }
+.form-field input:user-invalid { border-color:#c0392b; box-shadow:0 0 0 3px rgba(192,57,43,.12); }
+.form-field:has(input:user-invalid) .form-field__hint { color:#c0392b; font-weight:700; }
