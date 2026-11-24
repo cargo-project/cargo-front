@@ -260,3 +260,53 @@ body { background-image: radial-gradient(circle at 82% -10%, rgba(107,143,113,.1
 .form-field__hint { color:var(--muted); font-size:10.5px; font-weight:500; line-height:1.35; }
 .form-field input:user-invalid { border-color:#c0392b; box-shadow:0 0 0 3px rgba(192,57,43,.12); }
 .form-field:has(input:user-invalid) .form-field__hint { color:#c0392b; font-weight:700; }
+/* Acciones destructivas: botón de peligro, eliminar en tablas y diálogo de confirmación. */
+.button--danger { color:#FFFFFF; background:var(--danger); }.button--danger:hover { background:#9c4436; }.button--danger:disabled { opacity:.6; cursor:not-allowed; }
+.row-actions .row-actions__delete { color:var(--danger); }.row-actions .row-actions__delete:hover { border-color:var(--danger); background:var(--danger-soft); }
+.confirm-dialog { display:flex; gap:14px; align-items:flex-start; margin:14px 0 6px; }
+.confirm-dialog__icon { display:grid; place-items:center; flex:0 0 42px; height:42px; border-radius:12px; color:var(--danger); background:var(--danger-soft); }
+.confirm-dialog__message { margin:0 0 6px; color:var(--text); font-size:14px; line-height:1.5; }.confirm-dialog__hint { margin:0; color:var(--muted); font-size:12px; }
+/* Consola del administrador */
+.sidebar__section { margin:16px 12px 6px; color:rgba(255,255,255,.55); font-size:10px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; }
+.sidebar.is-collapsed .sidebar__section { opacity:0; height:0; margin:8px 0; overflow:hidden; }
+.admin-page { display:flex; flex-direction:column; gap:18px; }
+.admin-kpi-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; }
+.admin-kpi { display:flex; gap:13px; align-items:flex-start; padding:16px; }
+.admin-kpi__icon { display:grid; place-items:center; flex:0 0 40px; height:40px; border-radius:11px; color:var(--primary); background:#e8f1ec; }
+.admin-kpi p { margin:0; color:var(--muted); font-size:11px; font-weight:700; }.admin-kpi strong { display:block; margin:3px 0; color:var(--text); font-size:24px; }.admin-kpi small { color:var(--muted); font-size:11px; }
+.admin-kpi--warning .admin-kpi__icon { color:var(--warning); background:var(--warning-soft); }
+.admin-columns { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,1fr); gap:16px; }
+.admin-panel { padding:18px; }.admin-panel header { display:flex; align-items:center; gap:11px; margin-bottom:12px; }.admin-panel header > svg { color:var(--primary); flex:0 0 auto; }
+.admin-panel header > div { flex:1; }.admin-panel h2 { margin:0; font-size:15px; }.admin-panel header p { margin:2px 0 0; color:var(--muted); font-size:12px; }
+.admin-table { width:100%; border-collapse:collapse; font-size:13px; }.admin-table th { padding:8px 6px; color:var(--muted); font-size:10px; text-align:left; text-transform:uppercase; border-bottom:1px solid var(--border); }
+.admin-table td { padding:9px 6px; border-bottom:1px solid var(--border); }.admin-table td:not(:first-child), .admin-table th:not(:first-child) { text-align:right; }
+.admin-facts { display:grid; gap:6px; margin:14px 0 0; }.admin-facts div { display:flex; justify-content:space-between; gap:10px; font-size:12px; }.admin-facts dt { color:var(--muted); }.admin-facts dd { margin:0; font-weight:700; color:var(--text); text-align:right; }
+.admin-note { margin:10px 0 0; color:var(--muted); font-size:11.5px; line-height:1.45; }
+.admin-integrations { display:grid; gap:9px; margin:0; padding:0; list-style:none; }.admin-integrations li { display:flex; align-items:center; gap:11px; padding:10px; border:1px solid var(--border); border-radius:11px; }
+.admin-integrations li > div { flex:1; min-width:0; }.admin-integrations strong { display:block; font-size:13px; }.admin-integrations small { display:block; overflow:hidden; color:var(--muted); font-size:11px; white-space:nowrap; text-overflow:ellipsis; }
+.admin-dot { width:9px; height:9px; border-radius:50%; background:#9aa5b1; }.admin-dot--online { background:var(--success); }.admin-dot--offline { background:var(--danger); }.admin-dot--unconfigured { background:var(--warning); }
+.status-pill--unconfigured { color:var(--warning); background:var(--warning-soft); }
+.admin-role { display:inline-block; padding:4px 9px; border-radius:20px; font-size:11px; font-weight:800; }.admin-role--admin { color:#fff; background:var(--primary); }.admin-role--operator { color:var(--primary); background:#e8f1ec; }
+.admin-role-legend { display:grid; grid-template-columns:1fr 1fr; gap:16px; padding:14px 16px; }.admin-role-legend strong { font-size:13px; }.admin-role-legend p { margin:3px 0 0; color:var(--muted); font-size:12px; }
+.admin-you { color:var(--muted); font-size:11px; font-style:normal; }.admin-warning-text { color:var(--danger); font-weight:800; }
+.admin-action { font-weight:700; }.admin-action--user-login_failed, [class*="admin-action--"][class*="-deleted"] { color:var(--danger); }
+.admin-more { display:flex; justify-content:center; }
+.admin-denied { display:flex; flex-direction:column; align-items:center; gap:8px; padding:40px; text-align:center; color:var(--muted); }.admin-denied svg { color:var(--warning); }.admin-denied h2 { margin:0; color:var(--text); }
+@media(max-width:1100px){.admin-kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.admin-columns{grid-template-columns:1fr}}
+@media(max-width:640px){.admin-kpi-grid,.admin-role-legend{grid-template-columns:1fr}}
+/* Telegram en cuentas y recuperación de contraseña */
+.admin-telegram { display:inline-flex; align-items:center; gap:5px; color:var(--primary); font-weight:700; font-size:12px; }.admin-telegram--missing { color:var(--warning); }
+.forgot-form { display:grid; gap:14px; margin-top:12px; }.forgot-help, .forgot-notice { margin:0; color:var(--muted); font-size:13px; line-height:1.5; }
+.forgot-notice { padding:10px 12px; border-radius:10px; color:var(--primary); background:#e8f1ec; }
+.forgot-done { display:flex; flex-direction:column; align-items:center; gap:4px; margin-top:12px; text-align:center; color:var(--muted); }.forgot-done svg { color:var(--success); }.forgot-done p { margin:0; }
+.forgot-done .form-actions { width:100%; justify-content:center; margin-top:12px; }
+/* Mi perfil, registro y cuentas pendientes */
+.profile-intro { margin:4px 0 0; color:var(--muted); font-size:13px; }
+.profile-telegram { display:grid; gap:12px; padding:14px; border:1px solid var(--border); border-radius:12px; background:#f7faf8; }
+.profile-telegram__head { display:flex; align-items:center; gap:11px; }.profile-telegram__head > svg { color:var(--primary); }.profile-telegram__head > div { flex:1; }
+.profile-telegram__head strong { display:block; font-size:13px; color:var(--text); }.profile-telegram__head small { color:var(--muted); font-size:12px; }
+.profile-secure { display:inline-flex; align-items:center; gap:6px; margin-right:auto; color:var(--muted); font-size:12px; }
+.login-panel .login-register { display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:6px; width:100%; margin:20px 0 0; color:var(--muted); font:inherit; font-size:12px; text-align:center; }.login-panel .login-register button { border:0; padding:0; color:var(--primary); background:none; font:inherit; font-weight:800; cursor:pointer; }.login-panel .login-register button:hover { text-decoration:underline; }
+.register-form { margin-top:10px; }
+.status-pill--pending { color:var(--warning); background:var(--warning-soft); }
+.admin-pending-banner { margin:0; padding:12px 16px; color:var(--warning); background:var(--warning-soft); border-color:transparent; font-weight:700; font-size:13px; }
